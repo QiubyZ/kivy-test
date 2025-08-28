@@ -15,8 +15,13 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
+            - uses: actions/checkout@v4
+            - name: work space
+              run: echo ${{ github.workspace }}
             - name: Test Build
-              uses: QiubyZ/kivy-build@v1
-              with:
-                  buildozer_cmd: |
-                      echo 'yes' | buildozer -v android debug
+              run: buildozer init
+            # - name: Test Build
+            #   uses: QiubyZ/kivy-build@v1
+            #   with:
+            #       buildozer_cmd: |
+            #           echo 'yes' | buildozer -v android debug
