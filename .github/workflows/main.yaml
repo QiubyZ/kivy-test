@@ -16,6 +16,7 @@ jobs:
             #        with:
             #          buildozer_cmd: |
             #            echo 'yes' | buildozer -v android debug
+            - uses: actions/checkout@v4
             - name: Check Dir
               run: |
                   cd ${{ github.workspace }}
