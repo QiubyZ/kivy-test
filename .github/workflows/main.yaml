@@ -4,24 +4,37 @@ on:
     push:
         branches:
             - main
-
+#test
 jobs:
     build:
         runs-on: ubuntu-latest
-        permissions:
-            contents: write
-            pull-requests: write
-            repository-projects: write
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #    env:
+        #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
-            - uses: actions/checkout@v4
-            - name: work space
-              run: echo ${{ github.workspace }}
-            - name: Test Build
-              run: buildozer init
-            # - name: Test Build
-            #   uses: QiubyZ/kivy-build@v1
-            #   with:
-            #       buildozer_cmd: |
-            #           echo 'yes' | buildozer -v android debug
+            #      - name : Test Build
+            #        uses: QiubyZ/kivy-build@v1
+            #        with:
+            #          buildozer_cmd: |
+            #            echo 'yes' | buildozer -v android debug
+            - name: Check Dir
+              run: |
+                  cd ${{ github.workspace }}
+                  ls -l -a
+
+            - name: Build APK
+              uses: digreatbrian/buildozer-action@v2
+
+              with:
+                  python-version: 3.8
+                  buildozer-cmd: buildozer -v android debug
+                  work-dir: ${{ github.workspace }}
+
+            - name: Buat Rilis Baru
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: v1
+                  name: Clock #Test Release
+                  files: ${{ github.workspace }}/bin/*.apk
+                  draft: false
+                  prerelease: false
+                  generate_release_notes: false
