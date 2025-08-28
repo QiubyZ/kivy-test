@@ -1,42 +1,95 @@
+# name: CI - Android
+
+# on:
+#     push:
+#         branches:
+#             - main
+# #test
+# jobs:
+#     build:
+#         runs-on: ubuntu-22.04
+#         #    env:
+#         #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         steps:
+#             #      - name : Test Build
+#             #        uses: QiubyZ/kivy-build@v1
+#             #        with:
+#             #          buildozer_cmd: |
+#             #            echo 'yes' | buildozer -v android debug
+#             - uses: actions/checkout@v4
+#             - name: Check Dir
+#               run: |
+#                   cd ${{ github.workspace }}
+#                   ls -l -a
+#             - name: update apt
+#               run: apt list --upgradable
+#             - name: Build APK
+#               uses: digreatbrian/buildozer-action@v2
+
+#               with:
+#                   python-version: 3.8
+#                   buildozer-cmd: buildozer -v android debug
+#                   work-dir: ${{ github.workspace }}
+
+#             - name: Buat Rilis Baru
+#               uses: softprops/action-gh-release@v2
+#               with:
+#                   tag_name: v1
+#                   name: Clock #Test Release
+#                   files: ${{ github.workspace }}/bin/*.apk
+#                   draft: false
+#                   prerelease: false
+#                   generate_release_notes: false
+
 name: CI - Android
 
 on:
-    push:
-        branches:
-            - main
-#test
+  push:
+    branches:
+      - main
+
 jobs:
-    build:
-        runs-on: ubuntu-22.04
-        #    env:
-        #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            #      - name : Test Build
-            #        uses: QiubyZ/kivy-build@v1
-            #        with:
-            #          buildozer_cmd: |
-            #            echo 'yes' | buildozer -v android debug
-            - uses: actions/checkout@v4
-            - name: Check Dir
-              run: |
-                  cd ${{ github.workspace }}
-                  ls -l -a
-            - name: update apt
-              run: apt list --upgradable
-            - name: Build APK
-              uses: digreatbrian/buildozer-action@v2
+  build:
+    runs-on: ubuntu-22.04  # lebih cepat tersedia dibanding 20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-              with:
-                  python-version: 3.8
-                  buildozer-cmd: buildozer -v android debug
-                  work-dir: ${{ github.workspace }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
 
-            - name: Buat Rilis Baru
-              uses: softprops/action-gh-release@v2
-              with:
-                  tag_name: v1
-                  name: Clock #Test Release
-                  files: ${{ github.workspace }}/bin/*.apk
-                  draft: false
-                  prerelease: false
-                  generate_release_notes: false
+      - name: Setup Java 17 (Gradle needs this)
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip openjdk-17-jdk python3-pip \
+            autoconf libtool pkg-config zlib1g-dev \
+            libncurses6 libtinfo6 \
+            cmake libffi-dev libssl-dev
+
+      - name: Install Python dependencies (Buildozer + Cython)
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install Cython==0.29.33 buildozer
+
+      - name: Install requirements.txt (if exists)
+        run: |
+          if [ -f requirements.txt ]; then
+            python3 -m pip install -r requirements.txt
+          fi
+
+      - name: Build APK with Buildozer
+        run: |
+          echo "yes" | buildozer -v android debug
+
+      - name: List generated files
+        run: ls -lh bin/
+        
