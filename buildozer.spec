@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = PyBinClock
+title = AppSensor
 
 # (str) Package name
-package.name = binclock
+package.name = appsensor
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.ibnuwahyudi86
+package.domain = com.appsensor
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -37,7 +37,7 @@ version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,kivymd
+requirements = python3,kivy,kivymd,serial, android
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -94,7 +94,7 @@ fullscreen = 0
 #icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
 
 # (list) Permissions
-android.permissions = INTERNET
+android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE,BLUETOOTH, BLUETOOTH_ADMIN, BLUETOOTH_CONNECT, BLUETOOTH_SCAN
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host

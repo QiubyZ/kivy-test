@@ -13,11 +13,19 @@ from kivy.logger import Logger
 from kivy.utils import platform
 from kivy.metrics import dp
 from kivy.uix.scrollview import ScrollView
-
 # Import untuk Bluetooth Android
+print(platform)
 if platform == 'android':
     from android.permissions import request_permissions, Permission
     from jnius import autoclass, cast
+    # request_permissions(
+    #     [
+    #         Permission.READ_EXTERNAL_STORAGE,
+    #         Permission.WRITE_EXTERNAL_STORAGE,
+    #         Permission.BLUETOOTH_CONNECT,
+    #         Permission.Permission.BLUETOOTH_SCAN
+    #     ]
+    # )
     
     # Java classes untuk Bluetooth Android
     BluetoothAdapter = autoclass('android.bluetooth.BluetoothAdapter')
@@ -28,6 +36,7 @@ if platform == 'android':
     OutputStream = autoclass('java.io.OutputStream')
     Intent = autoclass('android.content.Intent')
     Activity = autoclass('org.kivy.android.PythonActivity').mActivity
+    
 else:
     # Untuk testing di desktop
     import serial
