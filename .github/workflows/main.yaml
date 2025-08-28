@@ -16,6 +16,14 @@ jobs:
             #        with:
             #          buildozer_cmd: |
             #            echo 'yes' | buildozer -v android debug
+            - name: Cache Buildozer
+              uses: actions/cache@v3
+              with:
+                path: .buildozer
+                key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+                restore-keys: |
+                  ${{ runner.os }}-buildozer-
+            
             - uses: actions/checkout@v4
             - name: Check Dir
               run: |
@@ -25,7 +33,6 @@ jobs:
               run: apt list --upgradable
             - name: Build APK
               uses: digreatbrian/buildozer-action@v2
-
               with:
                   python-version: 3.8
                   buildozer-cmd: buildozer -v android debug
@@ -40,7 +47,6 @@ jobs:
                   draft: false
                   prerelease: false
                   generate_release_notes: false
-
 # name: CI - Android
 
 # on:
