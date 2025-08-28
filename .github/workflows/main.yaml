@@ -19,11 +19,11 @@ jobs:
             - name: Cache Buildozer
               uses: actions/cache@v3
               with:
-                path: .buildozer
-                key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
-                restore-keys: |
-                  ${{ runner.os }}-buildozer-
-            
+                  path: .buildozer
+                  key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+                  restore-keys: |
+                      ${{ runner.os }}-buildozer-
+
             - uses: actions/checkout@v4
             - name: Check Dir
               run: |
@@ -42,7 +42,7 @@ jobs:
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: v1
-                  name: Clock #Test Release
+                  name: AppSensor #Test Release
                   files: ${{ github.workspace }}/bin/*.apk
                   draft: false
                   prerelease: false
