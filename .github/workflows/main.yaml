@@ -20,7 +20,8 @@ jobs:
               run: |
                   cd ${{ github.workspace }}
                   ls -l -a
-
+            - name: update apt
+              run: apt list --upgradable
             - name: Build APK
               uses: digreatbrian/buildozer-action@v2
 
